@@ -1,0 +1,7 @@
+module.exports = {
+    port: process.env.PORT || 5000,
+    jwtSecret: process.env.JWT_SECRET || 'fcc5e3cd4b6ceaa8e9909c9c0c9eddce8f9a9e8b945d85fe524d90b881dd9fa0895356b4fe6fe4c25c83e434c68462d0b146af0be595a6f3079cc87d07108247',
+    jwtExpires: process.env.JWT_EXPIRES_IN || '1000d',
+    clientUrl: process.env.CLIENT_URL || 'http://localhost:3000'
+  };
+  

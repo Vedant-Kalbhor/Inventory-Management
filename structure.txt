@@ -1,0 +1,119 @@
+mern-inventory/
+├── .gitignore
+├── README.md
+├── docker-compose.yml
+├── .env.example
+├── package.json                   # root scripts (optional; orchestrates client & server)
+├── /client                        # React app (recommend Vite or CRA)
+│   ├── package.json
+│   ├── tailwind.config.cjs
+│   ├── postcss.config.cjs
+│   ├── public/
+│   │   └── index.html
+│   └── src/
+│       ├── main.jsx               # app bootstrap
+│       ├── index.css              # tailwind base
+│       ├── App.jsx
+│       ├── vite-env.d.ts (if TS)
+│       ├── api/
+│       │   ├── axiosInstance.js
+│       │   └── endpoints.js
+│       ├── app/
+│       │   └── store.js           # Redux Toolkit store
+│       ├── features/              # RTK slices + feature-specific code
+│       │   ├── auth/
+│       │   │   ├── authSlice.js
+│       │   │   ├── authAPI.js
+│       │   │   └── LoginForm.jsx
+│       │   ├── products/
+│       │   │   ├── productsSlice.js
+│       │   │   ├── ProductList.jsx
+│       │   │   └── ProductForm.jsx
+│       │   ├── orders/
+│       │   ├── suppliers/
+│       │   ├── warehouses/
+│       │   ├── notifications/
+│       │   └── audit/
+│       ├── components/
+│       │   ├── layout/
+│       │   │   ├── Header.jsx
+│       │   │   ├── Sidebar.jsx
+│       │   │   ├── Footer.jsx
+│       │   │   └── ProtectedRoute.jsx
+│       │   └── ui/
+│       │       ├── Button.jsx
+│       │       ├── Modal.jsx
+│       │       ├── Table.jsx
+│       │       └── FormControls/
+│       ├── pages/
+│       │   ├── Admin/
+│       │   │   ├── Dashboard.jsx
+│       │   │   └── UsersManagement.jsx
+│       │   ├── Manager/
+│       │   ├── Employee/
+│       │   ├── Supplier/
+│       │   └── Auth/
+│       ├── hooks/
+│       │   ├── useAuth.js
+│       │   ├── useSocket.js
+│       │   └── useBarcodeScanner.js
+│       ├── utils/
+│       │   ├── constants.js
+│       │   ├── validators.js
+│       │   └── helpers.js
+│       ├── services/
+│       │   └── csvService.js
+│       └── tests/                  # React Testing Library + Jest tests
+│
+└── /server
+    ├── package.json
+    ├── Dockerfile
+    ├── src/
+    │   ├── index.js                # express app init
+    │   ├── server.js               # http server + socket.io attach
+    │   ├── config/
+    │   │   ├── db.js
+    │   │   └── env.js
+    │   ├── controllers/
+    │   │   ├── authController.js
+    │   │   ├── userController.js
+    │   │   ├── productController.js
+    │   │   ├── orderController.js
+    │   │   ├── supplierController.js
+    │   │   └── warehouseController.js
+    │   ├── models/
+    │   │   ├── User.js
+    │   │   ├── Product.js
+    │   │   ├── Supplier.js
+    │   │   ├── Order.js
+    │   │   ├── Warehouse.js
+    │   │   └── AuditLog.js
+    │   ├── routes/
+    │   │   ├── authRoutes.js
+    │   │   ├── userRoutes.js
+    │   │   ├── productRoutes.js
+    │   │   ├── orderRoutes.js
+    │   │   ├── supplierRoutes.js
+    │   │   └── warehouseRoutes.js
+    │   ├── middlewares/
+    │   │   ├── authMiddleware.js    # verify JWT
+    │   │   ├── roleMiddleware.js    # RBAC guard
+    │   │   ├── errorHandler.js
+    │   │   ├── requestValidator.js
+    │   │   └── uploadMiddleware.js
+    │   ├── services/
+    │   │   ├── emailService.js
+    │   │   ├── notificationService.js  # socket manager
+    │   │   └── csvService.js
+    │   ├── utils/
+    │   │   ├── logger.js
+    │   │   ├── paginator.js
+    │   │   └── seedData.js
+    │   ├── jobs/
+    │   │   └── scheduledJobs.js
+    │   ├── sockets/
+    │   │   └── index.js
+    │   └── tests/                   # jest + supertest integration tests
+    ├── scripts/
+    │   └── seed.js
+    └── .env.example

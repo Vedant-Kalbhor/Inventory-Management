@@ -19,7 +19,7 @@ async function createUser(req, res) {
   const user = new User({ name, email, role });
   user.password = password;
   await user.save();
-  res.status(201).json({ id: user._id, name: user.name, email: user.email, role: user.role });
+  res.status(201).json({ _id: user._id, name: user.name, email: user.email, role: user.role });
 }
 
 async function updateUser(req, res) {

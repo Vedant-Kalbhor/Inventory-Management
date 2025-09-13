@@ -1,4 +1,4 @@
-//server.js /app.js => configures the Express app.
+// server.js
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -16,16 +16,32 @@ const { errorHandler } = require('./middlewares/errorHandler');
 
 const app = express();
 
-// middlewares
+// Middlewares
 app.use(helmet());
+
+// ✅ CORS setup
+const allowedOrigins = [
+  'http://localhost:5173', // Vite frontend
+  'http://localhost:3000'  // (optional) CRA frontend
+];
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || '*'
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
-// api routes
+// API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
@@ -33,15 +49,18 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/warehouses', warehouseRoutes);
 
-// health
+// Health check
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
-// static (if needed) — e.g., serve built client
+// Serve client build in production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../../client/build')));
+  app.use(express.static(path.join(__dirname, '../../client/dist')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+  });
 }
 
-// error handler
+// Error handler
 app.use(errorHandler);
 
 module.exports = app;

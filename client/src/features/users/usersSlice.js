@@ -1,4 +1,3 @@
-// File: src/features/users/usersSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../api/axiosInstance';
 import { ENDPOINTS } from '../../api/endpoints';

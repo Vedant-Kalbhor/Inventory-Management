@@ -1,48 +1,68 @@
-const Order = require('../models/Order');
-const Product = require('../models/Product');
+const Order = require("../models/Order");
+const Product = require("../models/Product");
+const { emitToRole, emitToUser } = require("../services/notificationService");
+const { logAudit } = require("../services/auditService");
 
-async function listOrders(req, res) {
-  const orders = await Order.find().populate('items.productId').lean();
-  res.json(orders);
-}
+exports.listOrders = async (req, res) => {
+  let query = {};
 
-async function getOrder(req, res) {
-  const o = await Order.findById(req.params.id).populate('items.productId');
-  if (!o) return res.status(404).json({ message: 'Order not found' });
-  res.json(o);
-}
-
-async function createOrder(req, res) {
-  const { orderType, items, supplierId } = req.body;
-  if (!orderType || !items || !Array.isArray(items) || !items.length) {
-    return res.status(400).json({ message: 'Invalid order data' });
+  if (req.user.role === "Supplier") {
+    query.supplierId = req.user._id;
   }
-  const order = await Order.create({
-    orderType,
-    items,
-    supplierId,
-    requestedBy: req.user ? req.user._id : undefined
-  });
-  res.status(201).json(order);
-}
 
-async function updateOrderStatus(req, res) {
-  const { id } = req.params;
+  const orders = await Order.find(query)
+    .populate("items.productId")
+    .populate("supplierId", "name")
+    .sort({ createdAt: -1 });
+
+  res.json(orders);
+};
+
+exports.createOrder = async (req, res) => {
+  const order = await Order.create({
+    ...req.body,
+    requestedBy: req.user._id
+  });
+
+  emitToRole("Supplier", "order:new", order);
+
+  await logAudit({
+    actor: req.user._id,
+    action: "CREATE_ORDER",
+    entity: "Order",
+    entityId: order._id,
+    meta: order
+  });
+
+  res.status(201).json(order);
+};
+
+exports.updateOrderStatus = async (req, res) => {
   const { status } = req.body;
-  const order = await Order.findById(id);
-  if (!order) return res.status(404).json({ message: 'Not found' });
+  const order = await Order.findById(req.params.id);
+
+  if (!order) return res.status(404).json({ message: "Order not found" });
 
   order.status = status;
   await order.save();
 
-  // If delivered and it's a purchase order, increment product stock
-  if (status === 'Delivered' && order.orderType === 'Purchase') {
-    for (const it of order.items) {
-      await Product.findByIdAndUpdate(it.productId, { $inc: { stockQuantity: it.quantity } });
+  if (status === "Delivered" && order.orderType === "Purchase") {
+    for (const item of order.items) {
+      await Product.findByIdAndUpdate(item.productId, {
+        $inc: { stockQuantity: item.quantity }
+      });
     }
   }
 
-  res.json({ message: 'Status updated', order });
-}
+  emitToUser(order.requestedBy, "order:updated", order);
 
-module.exports = { listOrders, getOrder, createOrder, updateOrderStatus };
+  await logAudit({
+    actor: req.user._id,
+    action: "UPDATE_ORDER_STATUS",
+    entity: "Order",
+    entityId: order._id,
+    meta: { status }
+  });
+
+  res.json(order);
+};

@@ -10,6 +10,8 @@ const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const supplierRoutes = require('./routes/supplierRoutes');
 const warehouseRoutes = require('./routes/warehouseRoutes');
+const analyticsRoutes = require("./routes/analyticsRoutes");
+
 
 const { errorHandler } = require('./middlewares/errorHandler');
 
@@ -17,6 +19,8 @@ const app = express();
 
 // Middlewares
 app.use(helmet());
+app.use("/api/audit", require("./routes/auditRoutes"));
+
 
 // ✅ CORS setup
 const allowedOrigins = [
@@ -47,6 +51,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/warehouses', warehouseRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 // Health check
 app.get('/health', (req, res) => res.json({ status: 'ok' }));

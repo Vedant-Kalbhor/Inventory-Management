@@ -1,19 +1,24 @@
-// A tiny notification helper that emits events via socket.io
-let io;
+let io = null;
 
-function attach(ioInstance) {
+function initNotificationService(ioInstance) {
   io = ioInstance;
 }
 
-function emitToAll(event, payload) {
-  if (!io) return;
-  io.emit(event, payload);
+function emitGlobal(event, payload) {
+  if (io) io.emit(event, payload);
 }
 
 function emitToUser(userId, event, payload) {
-  if (!io) return;
-  // simplistic: emit to a room named with userId (clients should join room)
-  io.to(userId.toString()).emit(event, payload);
+  if (io) io.to(`user:${userId}`).emit(event, payload);
 }
 
-module.exports = { attach, emitToAll, emitToUser };
+function emitToRole(role, event, payload) {
+  if (io) io.to(`role:${role}`).emit(event, payload);
+}
+
+module.exports = {
+  initNotificationService,
+  emitGlobal,
+  emitToUser,
+  emitToRole
+};

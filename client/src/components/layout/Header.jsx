@@ -8,7 +8,8 @@ export default function Header() {
 
   return (
     <header className="bg-white border-b p-4 flex justify-between items-center">
-      <div className="text-lg font-semibold">Inventory Management</div>
+      {/* <div className="text-lg font-semibold">Inventory & Supply Chain Management System</div> */}
+      <div className=""></div>
       <div className="flex items-center space-x-3">
         {user ? (
           <>

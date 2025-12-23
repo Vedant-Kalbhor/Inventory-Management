@@ -4,7 +4,7 @@ const { generateForecast } = require("../controllers/forecastController");
 const { optimizeInventory } = require("../controllers/optimizationController");
 
 const router = express.Router();
-const ML_SERVICE_URL = "http://localhost:8001";
+const ML_SERVICE_URL = "http://localhost:8000";
 
 router.get("/health", async (req, res) => {
   try {

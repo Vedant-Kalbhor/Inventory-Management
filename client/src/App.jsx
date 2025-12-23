@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate,BrowserRouter } from 'react-router-dom';
 import LoginPage from './pages/Auth/LoginPage';
 import AdminDashboard from './pages/Admin/Dashboard';
 import UsersManagement from './pages/Admin/UsersManagement';
@@ -10,13 +10,18 @@ import ProtectedRoute from './components/layout/ProtectedRoute';
 import Header from './components/layout/Header';
 import Sidebar from './components/layout/Sidebar';
 
+import ForecastDashboard from "./pages/ForecastDashboard";
+import OptimizationDashboard from "./pages/OptimizationDashboard";
+
 export default function App() {
   return (
+    
     <div className="min-h-screen flex">
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <Header />
         <main className="p-6">
+          
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route
@@ -59,11 +64,16 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/analytics/forecast" element={<ForecastDashboard />} />
+            <Route path="/analytics/optimize" element={<OptimizationDashboard />} />
             <Route path="/" element={<Navigate to="/employee" replace />} />
             <Route path="*" element={<div>404 - Not Found</div>} />
           </Routes>
         </main>
       </div>
     </div>
+    
   );
 }
+
+

@@ -3,7 +3,8 @@ import authReducer from '../features/auth/authSlice';
 import productsReducer from '../features/products/productsSlice';
 import suppliersReducer from '../features/suppliers/suppliersSlice';
 import warehousesReducer from '../features/warehouses/warehousesSlice';
-import usersReducer from '../features/users/usersSlice'
+import usersReducer from '../features/users/usersSlice';
+import ordersReducer from '../features/orders/ordersSlice'; // ✅ ADD THIS
 
 const store = configureStore({
   reducer: {
@@ -11,7 +12,8 @@ const store = configureStore({
     products: productsReducer,
     suppliers: suppliersReducer,
     warehouses: warehousesReducer,
-    users:usersReducer
+    users: usersReducer,
+    orders: ordersReducer, // ✅ REQUIRED
   },
 });
 

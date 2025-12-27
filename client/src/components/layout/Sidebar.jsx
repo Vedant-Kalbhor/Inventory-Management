@@ -80,6 +80,18 @@ export default function Sidebar() {
                 </NavLink>
               </>
             )}
+
+            {user.role === "Supplier" && (
+              <>
+                <NavLink to="/supplier" className={linkClass}>
+                  Supplier Dashboard
+                </NavLink>
+                <NavLink to="/supplier/orders" className={linkClass}>
+                  Purchase Orders
+                </NavLink>
+              </>
+            )}
+
           </>
         )}
       </nav>

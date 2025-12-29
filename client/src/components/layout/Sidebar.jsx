@@ -6,8 +6,7 @@ export default function Sidebar() {
   const user = useSelector((s) => s.auth.user);
 
   const linkClass = ({ isActive }) =>
-    `p-2 rounded hover:bg-gray-200 ${
-      isActive ? "bg-gray-200 font-semibold" : ""
+    `p-2 rounded hover:bg-gray-200 ${isActive ? "bg-gray-200 font-semibold" : ""
     }`;
 
   return (
@@ -91,6 +90,10 @@ export default function Sidebar() {
                 </NavLink>
               </>
             )}
+            <NavLink to="/manager/place-order" className={linkClass}>
+              Place Purchase Order
+            </NavLink>
+
 
           </>
         )}

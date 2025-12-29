@@ -7,7 +7,7 @@ import ManagerHome from "./pages/Manager/ManagerHome";
 import EmployeeHome from "./pages/Employee/EmployeeHome";
 import SupplierHome from "./pages/Supplier/SupplierHome";
 import SupplierOrders from "./pages/Supplier/SupplierOrders";
-
+import PlacePurchaseOrder from "./pages/Manager/PlacePurchaseOrder";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import Header from "./components/layout/Header";
 import Sidebar from "./components/layout/Sidebar";
@@ -84,6 +84,14 @@ export default function App() {
             {/* Analytics */}
             <Route path="/analytics/forecast" element={<ForecastDashboard />} />
             <Route path="/analytics/optimize" element={<OptimizationDashboard />} />
+            <Route
+              path="/manager/place-order"
+              element={
+                <ProtectedRoute roles={["Manager", "Admin"]}>
+                  <PlacePurchaseOrder />
+                </ProtectedRoute>
+              }
+            />
 
             <Route path="/" element={<Navigate to="/employee" replace />} />
             <Route path="*" element={<div>404 - Not Found</div>} />

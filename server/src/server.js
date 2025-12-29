@@ -11,6 +11,7 @@ const orderRoutes = require('./routes/orderRoutes');
 const supplierRoutes = require('./routes/supplierRoutes');
 const warehouseRoutes = require('./routes/warehouseRoutes');
 const analyticsRoutes = require("./routes/analyticsRoutes");
+const purchaseOrderRoutes=  require("./routes/purchaseOrderRoutes")
 
 
 const { errorHandler } = require('./middlewares/errorHandler');
@@ -52,6 +53,8 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/warehouses', warehouseRoutes);
 app.use("/api/analytics", analyticsRoutes);
+app.use("/api/purchase-orders", purchaseOrderRoutes);
+
 
 // Health check
 app.get('/health', (req, res) => res.json({ status: 'ok' }));

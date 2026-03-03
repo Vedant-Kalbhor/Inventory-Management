@@ -10,12 +10,12 @@ export default function Sidebar() {
     }`;
 
   return (
-    <aside className="w-56 bg-gray-100 border-r min-h-screen p-4">
+    <aside className="w-56 bg-white border-r border-slate-200 min-h-screen p-6 flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
       {/* App Title */}
-      <div className="mb-6">
-        <div className="font-bold text-xl">SmartInventory</div>
-        <div className="text-sm text-gray-600">
-          Manage stock & analytics
+      <div className="mb-8 pl-2 border-l-4 border-indigo-600">
+        <div className="font-bold text-xl tracking-tight text-slate-900">SmartInventory</div>
+        <div className="text-xs text-slate-500 font-medium">
+          Next-Gen Supply Chain
         </div>
       </div>
 
@@ -35,9 +35,14 @@ export default function Sidebar() {
             </NavLink>
 
             {(user.role === "Manager" || user.role === "Admin") && (
-              <NavLink to="/manager" className={linkClass}>
-                Manager
-              </NavLink>
+              <>
+                <NavLink to="/manager" className={linkClass}>
+                  Manager Home
+                </NavLink>
+                <NavLink to="/manager/place-order" className={linkClass}>
+                  Place Purchase Order
+                </NavLink>
+              </>
             )}
 
             {/* Analytics Section (Manager + Admin only) */}
@@ -47,17 +52,11 @@ export default function Sidebar() {
                   Analytics
                 </div>
 
-                <NavLink
-                  to="/analytics/forecast"
-                  className={linkClass}
-                >
+                <NavLink to="/analytics/forecast" className={linkClass}>
                   Demand Forecast
                 </NavLink>
 
-                <NavLink
-                  to="/analytics/optimize"
-                  className={linkClass}
-                >
+                <NavLink to="/analytics/optimize" className={linkClass}>
                   Inventory Optimization
                 </NavLink>
               </>
@@ -90,11 +89,6 @@ export default function Sidebar() {
                 </NavLink>
               </>
             )}
-            <NavLink to="/manager/place-order" className={linkClass}>
-              Place Purchase Order
-            </NavLink>
-
-
           </>
         )}
       </nav>

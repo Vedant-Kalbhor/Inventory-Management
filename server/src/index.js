@@ -20,6 +20,9 @@ const PORT = process.env.PORT || 5000;
         require('./sockets').attach(server);
         console.log("Sockets attached");
 
+        require('./jobs/scheduledJobs').startJobs();
+        console.log("Scheduled jobs started");
+
         server.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
         });

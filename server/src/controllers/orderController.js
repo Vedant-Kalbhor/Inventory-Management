@@ -1,5 +1,6 @@
 const Order = require("../models/Order");
 const Product = require("../models/Product");
+const Supplier = require("../models/Supplier");
 const { emitToRole, emitToUser } = require("../services/notificationService");
 const { logAudit } = require("../services/auditService");
 
@@ -7,7 +8,14 @@ exports.listOrders = async (req, res) => {
   let query = {};
 
   if (req.user.role === "Supplier") {
-    query.supplierId = req.user._id;
+    // Find the supplier record linked to this user
+    const supplierRecord = await Supplier.findOne({ userId: req.user._id });
+    if (supplierRecord) {
+      query.supplierId = supplierRecord._id;
+    } else {
+      // Fallback: maybe the supplierId was set to req.user._id directly
+      query.supplierId = req.user._id;
+    }
   }
 
   const orders = await Order.find(query)
@@ -46,10 +54,11 @@ exports.updateOrderStatus = async (req, res) => {
   order.status = status;
   await order.save();
 
-  if (status === "Delivered" && order.orderType === "Purchase") {
+  if (status === "Delivered") {
+    const multiplier = order.orderType === "Purchase" ? 1 : -1;
     for (const item of order.items) {
       await Product.findByIdAndUpdate(item.productId, {
-        $inc: { stockQuantity: item.quantity }
+        $inc: { stockQuantity: item.quantity * multiplier }
       });
     }
   }

@@ -1,4 +1,6 @@
 const Order = require("../models/Order");
+const { emitToRole } = require("../services/notificationService");
+const { logAudit } = require("../services/auditService");
 
 const createPurchaseOrder = async (req, res) => {
   try {
@@ -11,9 +13,19 @@ const createPurchaseOrder = async (req, res) => {
     const po = await Order.create({
       supplierId,
       items,
-      status: "Pending",
-      type: "PURCHASE",
-      createdBy: req.user._id, // manager
+      status: "Created",
+      orderType: "Purchase",
+      requestedBy: req.user._id,
+    });
+
+    emitToRole("Supplier", "order:new", po);
+
+    await logAudit({
+      actor: req.user._id,
+      action: "CREATE_PURCHASE_ORDER",
+      entity: "Order",
+      entityId: po._id,
+      meta: po
     });
 
     res.status(201).json({

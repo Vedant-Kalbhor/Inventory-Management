@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../api/axiosInstance";
 
 export default function PlacePurchaseOrder() {
   const [suppliers, setSuppliers] = useState([]);
@@ -12,15 +12,8 @@ export default function PlacePurchaseOrder() {
   useEffect(() => {
     const fetchSuppliers = async () => {
       try {
-        const res = await axios.get("/api/users?role=Supplier");
-
-        // 🔥 IMPORTANT FIX: extract array safely
-        const supplierList =
-          Array.isArray(res.data)
-            ? res.data
-            : res.data.users || res.data.data || [];
-
-        setSuppliers(supplierList);
+        const res = await api.get("/suppliers");
+        setSuppliers(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
         console.error("Supplier fetch failed:", err);
         setSuppliers([]);
@@ -29,14 +22,8 @@ export default function PlacePurchaseOrder() {
 
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("/api/products");
-
-        const productList =
-          Array.isArray(res.data)
-            ? res.data
-            : res.data.products || res.data.data || [];
-
-        setProducts(productList);
+        const res = await api.get("/products");
+        setProducts(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
         console.error("Product fetch failed:", err);
         setProducts([]);
@@ -55,17 +42,21 @@ export default function PlacePurchaseOrder() {
 
     try {
       setLoading(true);
-      await axios.post("/api/purchase-orders", {
+      // backend Order schema needs orderType, supplierId, items
+      await api.post("/orders", {
+        orderType: "Purchase",
         supplierId,
         items: [{ productId, quantity: Number(quantity) }],
       });
       alert("Purchase Order Created Successfully");
+
+      // reset
       setSupplierId("");
       setProductId("");
       setQuantity(1);
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.error || "Failed to place order");
+      alert(err.response?.data?.message || err.response?.data?.error || "Failed to place order");
     } finally {
       setLoading(false);
     }
@@ -87,7 +78,7 @@ export default function PlacePurchaseOrder() {
         {suppliers.length > 0 ? (
           suppliers.map((s) => (
             <option key={s._id} value={s._id}>
-              {s.name || s.email}
+              {s.name}
             </option>
           ))
         ) : (
@@ -125,9 +116,8 @@ export default function PlacePurchaseOrder() {
       <button
         onClick={placeOrder}
         disabled={loading}
-        className={`w-full px-4 py-2 rounded text-white ${
-          loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
-        }`}
+        className={`w-full px-4 py-2 rounded text-white ${loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+          }`}
       >
         {loading ? "Placing Order..." : "Place Order"}
       </button>

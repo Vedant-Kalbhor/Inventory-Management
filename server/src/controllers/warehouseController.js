@@ -50,11 +50,6 @@ async function transferStock(req, res) {
   await from.save();
   await to.save();
 
-  // Optionally adjust global product quantity
-  const totalQty = from.products.reduce((s, p) => s + (p.productId.toString() === productId.toString() ? p.quantity : 0), 0)
-                 + to.products.reduce((s, p) => s + (p.productId.toString() === productId.toString() ? p.quantity : 0), 0);
-  await Product.findByIdAndUpdate(productId, { stockQuantity: totalQty });
-
   res.json({ message: 'Transfer complete' });
 }
 

@@ -16,9 +16,14 @@ function emitToRole(role, event, payload) {
   if (io) io.to(`role:${role}`).emit(event, payload);
 }
 
+function emitToAll(event, payload) {
+  emitGlobal(event, payload);
+}
+
 module.exports = {
   initNotificationService,
   emitGlobal,
+  emitToAll,
   emitToUser,
   emitToRole
 };

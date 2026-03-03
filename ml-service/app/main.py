@@ -1,8 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from app.schemas import ForecastRequest, ForecastResponse
 from app.models.arima_model import run_arima_forecast
+from app.health import router as health_router
 
 app = FastAPI(title="Inventory ML Service")
+
+app.include_router(health_router)
 
 @app.post("/forecast", response_model=ForecastResponse)
 def forecast_demand(req: ForecastRequest):

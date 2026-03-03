@@ -1,9 +1,7 @@
-import axios from "axios";
-
-const API_BASE = "http://localhost:5000/api/analytics";
+import api from "../api/axiosInstance";
 
 export const getForecast = (data) =>
-  axios.post(`${API_BASE}/forecast`, data);
+  api.post("/analytics/forecast", data);
 
 export const getOptimization = (data) =>
-  axios.post(`${API_BASE}/optimize`, data);
+  api.post("/analytics/optimize", data);

@@ -25,9 +25,10 @@ app.use("/api/audit", require("./routes/auditRoutes"));
 
 // ✅ CORS setup
 const allowedOrigins = [
-  'http://localhost:5173', // Vite frontend
-  'http://localhost:3000'  // (optional) CRA frontend
-];
+  process.env.CLIENT_URL,
+  'http://localhost:5173',
+  'http://localhost:3000'
+].filter(Boolean);
 
 app.use(cors({
   origin: function (origin, callback) {

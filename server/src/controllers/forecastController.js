@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const SalesHistory = require("../models/SalesHistory");
 const DemandForecast = require("../models/DemandForecast");
 
-const ML_SERVICE_URL = "http://localhost:8000";
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://localhost:8000";
 
 const generateForecast = async (req, res) => {
   try {

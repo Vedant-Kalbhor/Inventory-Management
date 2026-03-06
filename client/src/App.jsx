@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/Auth/LoginPage";
+import RegisterPage from "./pages/Auth/RegisterPage";
 import AdminDashboard from "./pages/Admin/Dashboard";
 import UsersManagement from "./pages/Admin/UsersManagement";
 import ManagerHome from "./pages/Manager/ManagerHome";
@@ -24,6 +25,7 @@ export default function App() {
         <main className="p-6">
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
 
             {/* Admin */}
             <Route

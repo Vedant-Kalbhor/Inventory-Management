@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { loginApi, fetchProfile } from './authAPI';
+import { loginApi, registerApi, fetchProfile } from './authAPI';
 
 const initialState = {
   user: null,
@@ -10,6 +10,12 @@ const initialState = {
 export const login = createAsyncThunk('auth/login', async (creds, thunkAPI) => {
   const data = await loginApi(creds);
   // store token in localStorage
+  if (data.token) localStorage.setItem('token', data.token);
+  return data.user;
+});
+
+export const registerUser = createAsyncThunk('auth/register', async (userData, thunkAPI) => {
+  const data = await registerApi(userData);
   if (data.token) localStorage.setItem('token', data.token);
   return data.user;
 });
@@ -42,6 +48,17 @@ const authSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Failed to login';
+      })
+      .addCase(registerUser.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.user = action.payload;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Failed to register';
       })
       .addCase(loadProfile.fulfilled, (state, action) => {
         state.user = action.payload;

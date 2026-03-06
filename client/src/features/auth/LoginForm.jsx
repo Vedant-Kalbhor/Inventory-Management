@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from './authSlice';
+import { Link } from 'react-router-dom';
 
 export default function LoginForm() {
   const { register, handleSubmit } = useForm();
@@ -37,6 +38,13 @@ export default function LoginForm() {
       >
         {status === 'loading' ? 'Signing in...' : 'Sign in'}
       </button>
+
+      <p className="mt-4 text-center text-sm text-gray-600">
+        Don't have an account?{' '}
+        <Link to="/register" className="text-indigo-600 hover:underline">
+          Register
+        </Link>
+      </p>
     </form>
   );
 }

@@ -6,6 +6,11 @@ export async function loginApi(credentials){
     return res.data;
 }
 
+export async function registerApi(userData){
+    const res = await api.post(ENDPOINTS.AUTH.REGISTER, userData);
+    return res.data;
+}
+
 export async function fetchProfile(){
     const res=await api.get(ENDPOINTS.AUTH.PROFILE);
     return res.data;
